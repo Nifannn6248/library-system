@@ -29,16 +29,25 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
-        return dd("Data berhasil dikirim dari form! (Bypass Sukses):", $request->all());
+        return dd("Aksi STORE Berhasil! Data form ditangkap oleh Controller:", $request->all());
     }
 
     public function edit($id)
     {
         $books = $this->getInitialBooks();
         $book = collect($books)->firstWhere('id', $id);
-        
         $book = (object) $book; 
 
         return view('books.edit', compact('book'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        return dd("Aksi UPDATE Berhasil! Data buku ID ".$id." diperbarui dengan nilai:", $request->all());
+    }
+
+    public function destroy($id)
+    {
+        return dd("Aksi DESTROY Berhasil! Permintaan hapus data buku dengan ID: " . $id . " sukses dijalankan.");
     }
 }
