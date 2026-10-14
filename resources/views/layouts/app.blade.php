@@ -23,7 +23,7 @@
 
     <footer>
         <hr>
-        <p>&copy; {{ date('Y') }} Library System - Pertemuan 6 Framework Laravel</p>
+        <p>&copy; {{ date('Y') }} Library System - Framework Laravel</p>
     </footer>
 </body>
 </html>
