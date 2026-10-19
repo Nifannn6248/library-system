@@ -24,30 +24,18 @@ class BookController extends Controller
 
     public function create()
     {
-        return view('books.create');
+        return view('books.create'); 
     }
 
     public function store(Request $request)
     {
-        return dd("Aksi STORE Berhasil! Data form ditangkap oleh Controller:", $request->all());
-    }
+        $validated = $request->validate([
+            'title'  => 'required|string|min:5|max:255', 
+            'author' => 'required|string|max:255',
+            'year'   => 'required|integer|digits:4|min:1900|max:' . date('Y'), 
+            'stock'  => 'required|integer|min:0|max:999', 
+        ]);
 
-    public function edit($id)
-    {
-        $books = $this->getInitialBooks();
-        $book = collect($books)->firstWhere('id', $id);
-        $book = (object) $book; 
-
-        return view('books.edit', compact('book'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        return dd("Aksi UPDATE Berhasil! Data buku ID ".$id." diperbarui dengan nilai:", $request->all());
-    }
-
-    public function destroy($id)
-    {
-        return dd("Aksi DESTROY Berhasil! Permintaan hapus data buku dengan ID: " . $id . " sukses dijalankan.");
+        return dd("Validasi Sukses! Data Valid & Siap Disimpan:", $validated);
     }
 }
