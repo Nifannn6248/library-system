@@ -16,7 +16,6 @@
                 @enderror
             </div>
             
-            <!-- Penulis -->
             <div style="margin-bottom: 15px;">
                 <label style="display:block; font-weight:bold; margin-bottom:5px;">Penulis:</label>
                 <input type="text" name="author" value="{{ old('author') }}" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
@@ -33,10 +32,25 @@
                 @enderror
             </div>
             
-            <div style="margin-bottom: 20px;">
+            <div style="margin-bottom: 15px;">
                 <label style="display:block; font-weight:bold; margin-bottom:5px;">Stok Buku (Maks. 999):</label>
                 <input type="text" name="stock" value="{{ old('stock') }}" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
                 @error('stock')
+                    <p style="color:red; font-size:13px; margin:5px 0 0 0;">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display:block; font-weight:bold; margin-bottom:5px;">Kategori Buku:</label>
+                <select name="category_id" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; background: white;">
+                    <option value="">-- Pilih Kategori --</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('category_id')
                     <p style="color:red; font-size:13px; margin:5px 0 0 0;">{{ $message }}</p>
                 @enderror
             </div>

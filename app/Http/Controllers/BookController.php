@@ -3,39 +3,56 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Book;
+use App\Models\Category; 
 
 class BookController extends Controller
 {
-    private function getInitialBooks() {
-        return [
-            ['id' => 1, 'title' => 'Laskar Pelangi', 'author' => 'Andrea Hirata', 'year' => 2005, 'stock' => 10],
-            ['id' => 2, 'title' => 'Bumi Manusia', 'author' => 'Pramoedya Ananta Toer', 'year' => 1980, 'stock' => 5],
-            ['id' => 3, 'title' => 'Filosofi Teras', 'author' => 'Henry Manampiring', 'year' => 2018, 'stock' => 15],
-            ['id' => 4, 'title' => 'Laut Bercerita', 'author' => 'Leila S. Chudori', 'year' => 2017, 'stock' => 8],
-            ['id' => 5, 'title' => 'Pulang', 'author' => 'Leila S. Chudori', 'year' => 2012, 'stock' => 12],
-        ];
-    }
-
     public function index()
     {
-        $books = $this->getInitialBooks();
+        $books = Book::with('category')->get(); 
         return view('books.index', compact('books'));
     }
 
     public function create()
     {
-        return view('books.create'); 
+        $categories = Category::all(); 
+        return view('books.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'  => 'required|string|min:5|max:255', 
-            'author' => 'required|string|max:255',
-            'year'   => 'required|integer|digits:4|min:1900|max:' . date('Y'), 
-            'stock'  => 'required|integer|min:0|max:999', 
+            'title'       => 'required|string|max:255',
+            'author'      => 'required|string|max:255',
+            'year'        => 'required|integer|digits:4|min:1900|max:' . date('Y'),
+            'stock'       => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
-        return dd("Validasi Sukses! Data Valid & Siap Disimpan:", $validated);
+        Book::create($validated);
+
+        return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan dengan kategori.');
+    }
+
+    public function edit(Book $book)
+    {
+        $categories = Category::all();
+        return view('books.edit', compact('book', 'categories'));
+    }
+
+    public function update(Request $request, Book $book)
+    {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'author'      => 'required|string|max:255',
+            'year'        => 'required|integer|digits:4|min:1900|max:' . date('Y'),
+            'stock'       => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        $book->update($validated);
+
+        return redirect()->route('books.index')->with('success', 'Data buku berhasil diperbarui.');
     }
 }
